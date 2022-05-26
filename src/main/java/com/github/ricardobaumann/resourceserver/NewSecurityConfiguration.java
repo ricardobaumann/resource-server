@@ -1,27 +1,26 @@
 package com.github.ricardobaumann.resourceserver;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.web.SecurityFilterChain;
 
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@Configuration
+public class NewSecurityConfiguration {
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors()
-                .and()
-                .csrf().disable()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .anyRequest().authenticated()
-                .and()
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests((authz) -> authz
+                        .anyRequest().authenticated()
+                )
                 .oauth2ResourceServer()
                 .jwt()
                 .jwtAuthenticationConverter(jwtConverter());
+        ;
+        return http.build();
     }
 
     protected JwtAuthenticationConverter jwtConverter() {
@@ -33,4 +32,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
         return converter;
     }
+
 }
