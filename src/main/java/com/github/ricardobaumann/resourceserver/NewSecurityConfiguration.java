@@ -23,7 +23,8 @@ public class NewSecurityConfiguration {
         return http.build();
     }
 
-    protected JwtAuthenticationConverter jwtConverter() {
+    @Bean
+    public JwtAuthenticationConverter jwtConverter() {
         JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
         authoritiesConverter.setAuthorityPrefix("");
         authoritiesConverter.setAuthoritiesClaimName("roles");
